@@ -14,7 +14,7 @@ public class FAuthentication: NSObject {
         return execHttpPost(url: url)
             .tryMap { response in
                 guard let address = response.data?.addr else {
-                    throw FError.invalidResponse
+                    throw FlowError.invalidResponse
                 }
                 return FlowData(address: address)
             }
@@ -46,15 +46,15 @@ public class FAuthentication: NSObject {
                     case .approved:
                         promise(.success(result))
                     case .declined:
-                        promise(.failure(FError.declined))
+                        promise(.failure(FlowError.declined))
                     case .pending:
                         self.canContinue = true
                         guard let local = result.local, let updates = result.updates else {
-                            promise(.failure(FError.generic))
+                            promise(.failure(FlowError.generic))
                             return
                         }
                         guard let url = URL(string: local.endpoint) else {
-                            promise(.failure(FError.urlInvaild))
+                            promise(.failure(FlowError.urlInvaild))
                             return
                         }
                         self.openAuthenticationSession(url: url)
@@ -74,12 +74,12 @@ public class FAuthentication: NSObject {
         return Future { promise in
 
             if !self.canContinue {
-                promise(.failure(FError.declined))
+                promise(.failure(FlowError.declined))
                 return
             }
 
             guard let url = URL(string: service.endpoint) else {
-                promise(.failure(FError.urlInvaild))
+                promise(.failure(FlowError.urlInvaild))
                 return
             }
 
@@ -113,7 +113,7 @@ public class FAuthentication: NSObject {
                 }.store(in: &self.cancellables)
         }
     }
-    
+
     private func openAuthenticationSession(url: URL) {
         DispatchQueue.main.async {
             let session = ASWebAuthenticationSession(url: url,

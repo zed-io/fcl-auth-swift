@@ -19,7 +19,7 @@ public class FlowAuthentication: NSObject {
         execHttpPost(url: url) { response in
             response.whenSuccess { result in
                 guard let address = result.data?.addr else {
-                    completion(FlowResponse.failure(error: FError.invalidResponse))
+                    completion(FlowResponse.failure(error: FlowError.invalidResponse))
                     return
                 }
                 let result = FlowData(address: address)
@@ -32,7 +32,6 @@ public class FlowAuthentication: NSObject {
         }
     }
 
-    
     private func fetchService(url: URL, completion: @escaping (FlowResponse<AuthnResponse>) -> Void) {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -46,7 +45,7 @@ public class FlowAuthentication: NSObject {
             }
 
             guard let data = data else {
-                completion(FlowResponse.failure(error: FError.invalidResponse))
+                completion(FlowResponse.failure(error: FlowError.invalidResponse))
                 return
             }
 
@@ -72,15 +71,15 @@ public class FlowAuthentication: NSObject {
                 case .approved:
                     completion(response)
                 case .declined:
-                    completion(FlowResponse.failure(error: FError.declined))
+                    completion(FlowResponse.failure(error: FlowError.declined))
                 case .pending:
                     self.canContinue = true
                     guard let local = result.local, let updates = result.updates else {
-                        completion(FlowResponse.failure(error: FError.generic))
+                        completion(FlowResponse.failure(error: FlowError.generic))
                         return
                     }
                     guard let url = URL(string: local.endpoint) else {
-                        completion(FlowResponse.failure(error: FError.urlInvaild))
+                        completion(FlowResponse.failure(error: FlowError.urlInvaild))
                         return
                     }
                     self.openAuthenticationSession(url: url)
@@ -98,12 +97,12 @@ public class FlowAuthentication: NSObject {
 
     private func poll(service: Service, completion: @escaping (FlowResponse<AuthnResponse>) -> Void) {
         if !canContinue {
-            completion(FlowResponse.failure(error: FError.declined))
+            completion(FlowResponse.failure(error: FlowError.declined))
             return
         }
 
         guard let url = URL(string: service.endpoint) else {
-            completion(FlowResponse.failure(error: FError.urlInvaild))
+            completion(FlowResponse.failure(error: FlowError.urlInvaild))
             return
         }
 
@@ -115,7 +114,7 @@ public class FlowAuthentication: NSObject {
                     self.closeSession()
                     completion(response)
                 case .declined:
-                    completion(FlowResponse.failure(error: FError.declined))
+                    completion(FlowResponse.failure(error: FlowError.declined))
                 case .pending:
                     // TODO: Improve this
                     DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(500)) {
@@ -137,7 +136,8 @@ public class FlowAuthentication: NSObject {
             }
             self.session = session
             session.presentationContextProvider = self
-            session.prefersEphemeralWebBrowserSession = true
+            // TODO: Need to check this
+//            session.prefersEphemeralWebBrowserSession = true
             session.start()
         }
     }

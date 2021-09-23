@@ -1,12 +1,12 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by lmcmz on 24/9/21.
 //
 
-import Foundation
 import AuthenticationServices
+import Foundation
 
 public protocol FlowAuthDelegate {
     func showLoading()
