@@ -8,13 +8,11 @@ The Flow Authentication Service is a Swift library for Flow (https://www.onflow.
 import FlowAuthenticationService
 
 FlowAuthentication.shared.authenticate { result in
-    DispatchQueue.main.async {
-        switch result {
-        case let .success(data):
-            print(data)
-        case let .failure(error):
-            print(error)
-        }
+    switch result {
+    case let .success(data):
+        print(data)
+    case let .failure(error):
+        print(error)
     }
 }
 ```
