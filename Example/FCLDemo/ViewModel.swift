@@ -32,16 +32,6 @@ class ViewModel: ObservableObject {
                 }
             }
         }
-
-//        FAuthentication.shared.authenticate()
-//            .receive(on: DispatchQueue.main)
-//            .sink { completion in
-//                if case let .failure(error) = completion {
-//                    self.address = error.localizedDescription
-//                }
-//            } receiveValue: { data in
-//                self.address = data.address
-//            }.store(in: &cancellables)
     }
 }
 
