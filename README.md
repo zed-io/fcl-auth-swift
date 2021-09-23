@@ -11,9 +11,9 @@ FlowAuthentication.shared.authenticate { result in
     DispatchQueue.main.async {
         switch result {
         case let .success(data):
-            self.address = data.address
+            print(data)
         case let .failure(error):
-            self.address = error.localizedDescription
+            print(error)
         }
     }
 }
