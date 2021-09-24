@@ -8,7 +8,7 @@ This library is a Swift package that can be installed via Xcode with the URL of 
 
 `https://github.com/zed-io/fcl-auth-swift.git`
 
-## Config 
+## Configuration
 
 You will need to configure your app information before you use the authentication library:
 
