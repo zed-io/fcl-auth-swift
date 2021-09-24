@@ -24,7 +24,7 @@ FCL.shared.config(app: FlowAppData(title: "FCL Demo",
 ## Authenticate 
 
 ```swift
-FlowAuthentication.shared.authenticate(.dapper) { result in
+FCL.shared.authenticate(.dapper) { result in
     switch result {
     case let .success(data):
         print(data)
@@ -39,7 +39,7 @@ FlowAuthentication.shared.authenticate(.dapper) { result in
 The Authentication Service has optional delegate to handle custom events or settings. 
 
 ```swift
-FlowAuthentication.shared.delegate = self
+FCL.shared.delegate = self
 
 public protocol FlowAuthDelegate {
     // Show loading while waiting for network response
