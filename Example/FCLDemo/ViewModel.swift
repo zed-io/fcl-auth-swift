@@ -30,7 +30,7 @@ class ViewModel: ObservableObject {
     func authn() {
         // Style 1
         // default provider is dapper
-        // FCL.shared.authenticate() { result in
+        // FCL.shared.authenticate { result in
         FCL.shared.authenticate(provider: .dapper) { result in
             DispatchQueue.main.async {
                 switch result {
@@ -43,19 +43,19 @@ class ViewModel: ObservableObject {
         }
 
         // Style 2
-        FCL.shared.authenticate(providerID: "foo") { response in
-            response.whenSuccess { data in
-                DispatchQueue.main.async {
-                    self.address = data.address
-                }
-            }
-
-            response.whenFailure { error in
-                DispatchQueue.main.async {
-                    self.address = error.localizedDescription
-                }
-            }
-        }
+//        FCL.shared.authenticate(providerID: "foo") { response in
+//            response.whenSuccess { data in
+//                DispatchQueue.main.async {
+//                    self.address = data.address
+//                }
+//            }
+//
+//            response.whenFailure { error in
+//                DispatchQueue.main.async {
+//                    self.address = error.localizedDescription
+//                }
+//            }
+//        }
     }
 }
 

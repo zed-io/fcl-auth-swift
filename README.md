@@ -24,7 +24,7 @@ FCL.shared.config(app: FlowAppData(title: "FCL Demo",
 ## Authenticate 
 
 ```swift
-FCL.shared.authenticate(.dapper) { result in
+FCL.shared.authenticate(provider: .dapper) { result in
     switch result {
     case let .success(data):
         print(data)
