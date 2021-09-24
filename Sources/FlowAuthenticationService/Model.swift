@@ -27,6 +27,13 @@ public struct FlowWalletService: Equatable {
     public let name: String
     public let method: Method
     public let endpoint: URL
+
+    public init(id: String, name: String, method: Method, endpoint: URL) {
+        self.id = id
+        self.name = name
+        self.method = method
+        self.endpoint = endpoint
+    }
 }
 
 public enum FlowWalletProvider: Equatable {

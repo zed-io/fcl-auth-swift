@@ -8,12 +8,23 @@ This is a Swift Package, and can be installed via Xcode with the URL of this rep
 
 `https://github.com/zed-io/FlowAuthenticationService.git`
 
+## Config 
+You will need to config the appinfo before you use the authentication service
+
+```swift
+
+import FlowAuthenticationService
+
+FCL.shared.config(app: FlowAppData(title: "FCL Demo",
+                                   icon: URL(string: "https://foo.com/bar.png")!),
+                  // default provider is  [.dapper, .blocto]
+                  providers: [.dapper, .blocto, .custom(service)])
+```
+
 ## Authenticate 
 
 ```swift
-import FlowAuthenticationService
-
-FlowAuthentication.shared.authenticate { result in
+FlowAuthentication.shared.authenticate(.dapper) { result in
     switch result {
     case let .success(data):
         print(data)

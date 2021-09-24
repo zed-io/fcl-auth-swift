@@ -21,6 +21,14 @@ public class FCL: NSObject {
         walletProviders = providers
     }
 
+    public func authenticate(providerID: String, completion: @escaping (FlowResponse<FlowData>) -> Void) {
+        guard let provider = walletProviders.filter({ $0.service.id == providerID }).first else {
+            completion(FlowResponse.failure(error: FlowError.missingWalletService))
+            return
+        }
+        authenticate(provider: provider, completion: completion)
+    }
+
     public func authenticate(provider: FlowWalletProvider = .dapper, completion: @escaping (FlowResponse<FlowData>) -> Void) {
         guard let _ = appData else {
             completion(FlowResponse.failure(error: FlowError.missingAppInfo))
