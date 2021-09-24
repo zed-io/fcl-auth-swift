@@ -7,33 +7,37 @@
 
 import Foundation
 
-public struct NFTResponse: Decodable {
+public struct NFTResponse: Decodable, Hashable {
     public let owner: String
     public let nfts: [NFTModel]
 }
 
-public struct NFTModel: Decodable {
+public struct NFTModel: Decodable, Hashable {
     public let id: String
     public let contract: Contract
     public let metadata: MetaData
+
+    public static func == (lhs: NFTModel, rhs: NFTModel) -> Bool {
+        return lhs.id == rhs.id
+    }
 }
 
-public struct Contract: Decodable {
+public struct Contract: Decodable, Hashable {
     public let name: String
     public let address: String
 }
 
-public struct MetaData: Decodable {
+public struct MetaData: Decodable, Hashable {
     public let image: Image
     public let play: Play
     public let createdAt: Date
 
-    public struct Play: Decodable {
+    public struct Play: Decodable, Hashable {
         public let id: String
         public let description: String
         public let stats: Stats
 
-        public struct Stats: Decodable {
+        public struct Stats: Decodable, Hashable {
             public let playerName: String
             public let jerseyNumber: String
             public let totalYearsExperience: String
@@ -41,7 +45,7 @@ public struct MetaData: Decodable {
         }
     }
 
-    public struct Image: Decodable {
+    public struct Image: Decodable, Hashable {
         public let assetPathPrefix: String
         public let hero: String
         public let black: String

@@ -5,6 +5,7 @@
 //  Created by lmcmz on 30/8/21.
 //
 
+import AVKit
 import FCLAuthSwift
 import Foundation
 import UIKit
@@ -13,6 +14,12 @@ class ViewModel: ObservableObject {
     @Published var address: String = ""
 
     @Published var isLoading: Bool = false
+
+    @Published var isPlayVideo: Bool = false
+
+    @Published var videoURL: URL? = nil
+
+    @Published var nfts: [NFTModel] = []
 
     init() {
         FCL.shared.delegate = self
@@ -36,6 +43,7 @@ class ViewModel: ObservableObject {
                 switch result {
                 case let .success(data):
                     self.address = data.address
+                    self.fetchNFTs()
                 case let .failure(error):
                     self.address = error.localizedDescription
                 }
@@ -56,6 +64,17 @@ class ViewModel: ObservableObject {
 //                }
 //            }
 //        }
+    }
+
+    func fetchNFTs() {
+        FCL.shared.fetchNFTs(address: address) { result in
+            result.whenSuccess { response in
+                self.nfts = response.nfts
+            }
+
+            result.whenFailure { _ in
+            }
+        }
     }
 }
 
