@@ -18,8 +18,7 @@ let package = Package(
     targets: [
         .target(
             name: "FCLAuthSwift",
-            dependencies: [],
-            resources: [.process("MockData/nft-mock.json")]
+            dependencies: []
         ),
         .testTarget(
             name: "FCLAuthSwiftTests",

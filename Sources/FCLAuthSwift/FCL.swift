@@ -182,29 +182,6 @@ public final class FCL: NSObject {
             self.session?.cancel()
         }
     }
-
-    // MARK: - NFTs
-
-    // TODO: It is a mock func for now, just for demo purpose
-    // Will update this when API is available
-    public func fetchNFTs(address _: String, completion: @escaping (FCLResponse<NFTResponse>) -> Void) {
-        guard let url = Bundle.module.url(forResource: "nft-mock", withExtension: "json"),
-            let data = try? Data(contentsOf: url) else {
-            completion(FCLResponse.failure(error: FCLError.generic))
-            return
-        }
-
-        do {
-            let decoder = JSONDecoder()
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
-            decoder.dateDecodingStrategy = .formatted(dateFormatter)
-            let response = try decoder.decode(NFTResponse.self, from: data)
-            completion(FCLResponse.success(result: response))
-        } catch {
-            completion(FCLResponse.failure(error: FCLError.invalidResponse))
-        }
-    }
 }
 
 extension FCL: ASWebAuthenticationPresentationContextProviding {
