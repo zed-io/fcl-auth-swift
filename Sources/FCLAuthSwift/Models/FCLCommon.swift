@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct FCLApplication {
+public struct FCLAppInfo {
     public let title: String
     public let icon: URL
 

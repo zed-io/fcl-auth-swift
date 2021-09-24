@@ -32,7 +32,7 @@ let provider = FCLWalletProvider(
 )
         
 FCL.shared.config(
-    application: FCLApplication(
+    appInfo: FCLAppInfo(
         title: "FCL iOS Demo",
         icon: URL(string: "https://foo.com/bar.png")!
     ),

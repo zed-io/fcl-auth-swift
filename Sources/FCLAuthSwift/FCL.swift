@@ -13,14 +13,14 @@ public final class FCL: NSObject {
     public var delegate: FCLAuthDelegate?
     private var canContinue = true
     private var session: ASWebAuthenticationSession?
-    private var application: FCLApplication?
+    private var appInfo: FCLAppInfo?
     private var providers: [FCLProvider] = [.dapper, .blocto]
 
     public func config(
-        application: FCLApplication,
+        appInfo: FCLAppInfo,
         providers: [FCLProvider] = [.dapper, .blocto]
     ) {
-        self.application = application
+        self.appInfo = appInfo
         self.providers = providers
     }
 
@@ -35,7 +35,7 @@ public final class FCL: NSObject {
     }
 
     public func authenticate(provider: FCLProvider = .dapper, completion: @escaping (FCLResponse<FCLAuthnResponse>) -> Void) {
-        guard let _ = application else {
+        guard let _ = appInfo else {
             completion(FCLResponse.failure(error: FCLError.missingAppInfo))
             return
         }
