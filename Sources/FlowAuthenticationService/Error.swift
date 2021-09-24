@@ -14,6 +14,8 @@ public enum FlowError: String, Error, LocalizedError {
     case invalidResponse
     case decodeFailure
     case unauthenticated
+    case missingAppInfo
+    case missingWalletService
 
     public var errorDescription: String? {
         return rawValue

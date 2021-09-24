@@ -14,14 +14,14 @@ class ViewModel: ObservableObject {
 
     @Published var isLoading: Bool = false
 
-    private var cancellables = Set<AnyCancellable>()
-
     init() {
-        FlowAuthentication.shared.delegate = self
+        FCL.shared.delegate = self
+        FCL.shared.config(app: FlowAppData(title: "FCL Demo",
+                                           icon: URL(string: "https://foo.com/bar.png")!))
     }
 
     func authn() {
-        FlowAuthentication.shared.authenticate { result in
+        FCL.shared.authenticate(provider: .dapper) { result in
             DispatchQueue.main.async {
                 switch result {
                 case let .success(data):

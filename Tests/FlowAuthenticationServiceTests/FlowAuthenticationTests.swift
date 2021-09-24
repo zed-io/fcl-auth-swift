@@ -1,4 +1,4 @@
-@testable import FlowAuthentication
+@testable import FlowAuthenticationService
 import XCTest
 
 final class FlowAuthenticationTests: XCTestCase {

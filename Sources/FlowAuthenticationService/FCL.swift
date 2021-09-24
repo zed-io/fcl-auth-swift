@@ -8,13 +8,30 @@
 import AuthenticationServices
 import Foundation
 
-public class FlowAuthentication: NSObject {
-    public static let shared = FlowAuthentication()
+public class FCL: NSObject {
+    public static let shared = FCL()
     public var delegate: FlowAuthDelegate?
     private var canContinue = true
     private var session: ASWebAuthenticationSession?
+    private var appData: FlowAppData?
+    private var walletProviders: [FlowWalletProvider] = [.dapper, .blocto]
 
-    public func authenticate(completion: @escaping (FlowResponse<FlowData>) -> Void) {
+    public func config(app: FlowAppData, providers: [FlowWalletProvider] = [.dapper, .blocto]) {
+        appData = app
+        walletProviders = providers
+    }
+
+    public func authenticate(provider: FlowWalletProvider = .dapper, completion: @escaping (FlowResponse<FlowData>) -> Void) {
+        guard let _ = appData else {
+            completion(FlowResponse.failure(error: FlowError.missingAppInfo))
+            return
+        }
+
+        guard walletProviders.contains(provider) else {
+            completion(FlowResponse.failure(error: FlowError.missingWalletService))
+            return
+        }
+
         let url = URL(string: "https://dapper-http-post.vercel.app/api/authn")!
         execHttpPost(url: url) { response in
             response.whenSuccess { result in
@@ -149,7 +166,7 @@ public class FlowAuthentication: NSObject {
     }
 }
 
-extension FlowAuthentication: ASWebAuthenticationPresentationContextProviding {
+extension FCL: ASWebAuthenticationPresentationContextProviding {
     public func presentationAnchor(for _: ASWebAuthenticationSession) -> ASPresentationAnchor {
         if let anchor = self.delegate?.presentationAnchor() {
             return anchor
