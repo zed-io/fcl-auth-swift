@@ -1,4 +1,4 @@
-# fcl-auth-swift
+# FCLAuthSwift
 
 `FCLAuthSwift` is a Swift library for the [Flow Client Library (FCL)](https://docs.onflow.org/fcl/)
 that enables Flow wallet authentication on iOS devices.
