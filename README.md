@@ -6,7 +6,7 @@ The Flow Authentication Service is a Swift library for Flow (https://www.onflow.
 
 This is a Swift Package, and can be installed via Xcode with the URL of this repository:
 
-`https://github.com/zed-io/FlowAuthenticationService.git`
+`https://github.com/zed-io/fcl-auth-swift.git`
 
 ## Config 
 You will need to config the appinfo before you use the authentication service
