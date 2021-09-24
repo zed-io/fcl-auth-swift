@@ -25,10 +25,10 @@ struct ContentView: View {
                             ForEach(viewModel.nfts, id: \.self) { nft in
                                 Button(action: {
                                     viewModel.isPlayVideo.toggle()
-                                    viewModel.videoURL = URL(string: nft.metadata.image.black)!
+                                    viewModel.videoURL = nft.metadata.image.black
                                 }) {
                                     VStack {
-                                        AsyncImage(url: URL(string: nft.metadata.image.hero)!) { image in
+                                        AsyncImage(url: nft.metadata.image.hero) { image in
                                             image.resizable()
                                         } placeholder: {
                                             ProgressView()

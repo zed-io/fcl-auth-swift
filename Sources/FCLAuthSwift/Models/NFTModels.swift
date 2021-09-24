@@ -46,8 +46,8 @@ public struct MetaData: Decodable, Hashable {
     }
 
     public struct Image: Decodable, Hashable {
-        public let assetPathPrefix: String
-        public let hero: String
-        public let black: String
+        public let assetPathPrefix: URL
+        public let hero: URL
+        public let black: URL
     }
 }
