@@ -13,11 +13,11 @@ struct AuthnResponse: Decodable {
     public let status: Status
     public var updates: Service?
     public var local: Service?
-    public var data: AuthData?
+    public var data: AuthnData?
     public let reason: String?
 }
 
-struct AuthData: Decodable {
+struct AuthnData: Decodable {
     public let addr: String?
     public let fType: String
     public let fVsn: String?
@@ -37,27 +37,13 @@ enum Status: String, Decodable {
 struct Service: Decodable {
     let fType: String?
     let fVsn: String?
-    let type: Name?
-    let method: Method
+    let type: FCLServiceType?
+    let method: FCLServiceMethod
     let endpoint: String
     let uid: String?
     let id: String?
     public let identity: Identity?
     public let provider: Provider?
-}
-
-public enum Method: String, Decodable {
-    case post = "HTTP/POST"
-    case get = "HTTP/GET"
-    case iframe = "VIEW/IFRAME"
-}
-
-enum Name: String, Decodable {
-    case authn
-    case authz
-    case preAuthz = "pre-authz"
-    case userSignature = "user-signature"
-    case backChannel = "back-channel-rpc"
 }
 
 struct Identity: Decodable {

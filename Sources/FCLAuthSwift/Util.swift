@@ -8,30 +8,13 @@
 import AuthenticationServices
 import Foundation
 
-public protocol FlowAuthDelegate {
+public protocol FCLAuthDelegate {
     func showLoading()
     func hideLoading()
 }
 
-extension FlowAuthDelegate {
+extension FCLAuthDelegate {
     func presentationAnchor() -> UIWindow {
         return ASPresentationAnchor()
-    }
-}
-
-public enum FlowResponse<T: Decodable> {
-    case failure(error: Error)
-    case success(result: T)
-
-    public func whenSuccess(completion: @escaping (T) -> Void) {
-        if case let .success(result) = self {
-            completion(result)
-        }
-    }
-
-    public func whenFailure(completion: @escaping (Error) -> Void) {
-        if case let .failure(error) = self {
-            completion(error)
-        }
     }
 }

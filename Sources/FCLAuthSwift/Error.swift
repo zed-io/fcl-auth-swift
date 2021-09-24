@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum FlowError: String, Error, LocalizedError {
+public enum FCLError: String, Error, LocalizedError {
     case generic
     case urlInvaild
     case declined

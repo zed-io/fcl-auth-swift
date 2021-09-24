@@ -10,69 +10,75 @@ import Foundation
 
 public final class FCL: NSObject {
     public static let shared = FCL()
-    public var delegate: FlowAuthDelegate?
+    public var delegate: FCLAuthDelegate?
     private var canContinue = true
     private var session: ASWebAuthenticationSession?
-    private var appData: FlowAppData?
-    private var walletProviders: [FlowWalletProvider] = [.dapper, .blocto]
+    private var application: FCLApplication?
+    private var providers: [FCLProvider] = [.dapper, .blocto]
 
-    public func config(app: FlowAppData, providers: [FlowWalletProvider] = [.dapper, .blocto]) {
-        appData = app
-        walletProviders = providers
+    public func config(
+        application: FCLApplication,
+        providers: [FCLProvider] = [.dapper, .blocto]
+    ) {
+        self.application = application
+        self.providers = providers
     }
 
     // MARK: - Authenticate
 
-    public func authenticate(providerID: String, completion: @escaping (FlowResponse<FlowData>) -> Void) {
-        guard let provider = walletProviders.filter({ $0.service.id == providerID }).first else {
-            completion(FlowResponse.failure(error: FlowError.missingWalletService))
+    public func authenticate(providerID: String, completion: @escaping (FCLResponse<FCLAuthnResponse>) -> Void) {
+        guard let provider = providers.filter({ $0.provider.id == providerID }).first else {
+            completion(FCLResponse.failure(error: FCLError.missingWalletService))
             return
         }
         authenticate(provider: provider, completion: completion)
     }
 
-    public func authenticate(provider: FlowWalletProvider = .dapper, completion: @escaping (FlowResponse<FlowData>) -> Void) {
-        guard let _ = appData else {
-            completion(FlowResponse.failure(error: FlowError.missingAppInfo))
+    public func authenticate(provider: FCLProvider = .dapper, completion: @escaping (FCLResponse<FCLAuthnResponse>) -> Void) {
+        guard let _ = application else {
+            completion(FCLResponse.failure(error: FCLError.missingAppInfo))
             return
         }
 
-        guard walletProviders.contains(provider) else {
-            completion(FlowResponse.failure(error: FlowError.missingWalletService))
+        guard providers.contains(provider) else {
+            completion(FCLResponse.failure(error: FCLError.missingWalletService))
             return
         }
+        
+        print(provider)
+        print(provider.provider.endpoint)
 
-        let url = URL(string: "https://dapper-http-post.vercel.app/api/authn")!
-        execHttpPost(url: url) { response in
+        execHttpPost(url: provider.provider.endpoint) { response in
             response.whenSuccess { result in
                 guard let address = result.data?.addr else {
-                    completion(FlowResponse.failure(error: FlowError.invalidResponse))
+                    completion(FCLResponse.failure(error: FCLError.invalidResponse))
                     return
                 }
-                let result = FlowData(address: address)
-                completion(FlowResponse.success(result: result))
+                let result = FCLAuthnResponse(address: address)
+                completion(FCLResponse.success(result: result))
             }
 
             response.whenFailure { error in
-                completion(FlowResponse.failure(error: error))
+                completion(FCLResponse.failure(error: error))
             }
         }
     }
 
-    private func fetchService(url: URL, completion: @escaping (FlowResponse<AuthnResponse>) -> Void) {
+    private func fetchService(url: URL, completion: @escaping (FCLResponse<AuthnResponse>) -> Void) {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        
         // TODO: Need to check extract config
         let config = URLSessionConfiguration.default
         let task = URLSession(configuration: config).dataTask(with: request) { data, response, error in
 
             if let error = error {
-                completion(FlowResponse.failure(error: error))
+                completion(FCLResponse.failure(error: error))
                 return
             }
 
             guard let data = data else {
-                completion(FlowResponse.failure(error: FlowError.invalidResponse))
+                completion(FCLResponse.failure(error: FCLError.invalidResponse))
                 return
             }
 
@@ -80,15 +86,15 @@ public final class FCL: NSObject {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let response = try decoder.decode(AuthnResponse.self, from: data)
-                completion(FlowResponse.success(result: response))
+                completion(FCLResponse.success(result: response))
             } catch {
-                completion(FlowResponse.failure(error: error))
+                completion(FCLResponse.failure(error: error))
             }
         }
         task.resume()
     }
 
-    private func execHttpPost(url: URL, completion: @escaping (FlowResponse<AuthnResponse>) -> Void) {
+    private func execHttpPost(url: URL, completion: @escaping (FCLResponse<AuthnResponse>) -> Void) {
         DispatchQueue.main.async {
             self.delegate?.showLoading()
         }
@@ -98,15 +104,15 @@ public final class FCL: NSObject {
                 case .approved:
                     completion(response)
                 case .declined:
-                    completion(FlowResponse.failure(error: FlowError.declined))
+                    completion(FCLResponse.failure(error: FCLError.declined))
                 case .pending:
                     self.canContinue = true
                     guard let local = result.local, let updates = result.updates else {
-                        completion(FlowResponse.failure(error: FlowError.generic))
+                        completion(FCLResponse.failure(error: FCLError.generic))
                         return
                     }
                     guard let url = URL(string: local.endpoint) else {
-                        completion(FlowResponse.failure(error: FlowError.urlInvaild))
+                        completion(FCLResponse.failure(error: FCLError.urlInvaild))
                         return
                     }
                     self.openAuthenticationSession(url: url)
@@ -117,19 +123,19 @@ public final class FCL: NSObject {
             }
 
             response.whenFailure { error in
-                completion(FlowResponse.failure(error: error))
+                completion(FCLResponse.failure(error: error))
             }
         }
     }
 
-    private func poll(service: Service, completion: @escaping (FlowResponse<AuthnResponse>) -> Void) {
+    private func poll(service: Service, completion: @escaping (FCLResponse<AuthnResponse>) -> Void) {
         if !canContinue {
-            completion(FlowResponse.failure(error: FlowError.declined))
+            completion(FCLResponse.failure(error: FCLError.declined))
             return
         }
 
         guard let url = URL(string: service.endpoint) else {
-            completion(FlowResponse.failure(error: FlowError.urlInvaild))
+            completion(FCLResponse.failure(error: FCLError.urlInvaild))
             return
         }
 
@@ -141,7 +147,7 @@ public final class FCL: NSObject {
                     self.closeSession()
                     completion(response)
                 case .declined:
-                    completion(FlowResponse.failure(error: FlowError.declined))
+                    completion(FCLResponse.failure(error: FCLError.declined))
                 case .pending:
                     // TODO: Improve this
                     DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(500)) {
@@ -166,7 +172,7 @@ public final class FCL: NSObject {
             self.session = session
             session.presentationContextProvider = self
             // TODO: Need to check this
-//            session.prefersEphemeralWebBrowserSession = true
+            // session.prefersEphemeralWebBrowserSession = true
             session.start()
         }
     }
@@ -181,10 +187,10 @@ public final class FCL: NSObject {
 
     // TODO: It is a mock func for now, just for demo purpose
     // Will update this when API is available
-    public func fetchNFTs(address _: String, completion: @escaping (FlowResponse<NFTResponse>) -> Void) {
+    public func fetchNFTs(address _: String, completion: @escaping (FCLResponse<NFTResponse>) -> Void) {
         guard let url = Bundle.module.url(forResource: "nft-mock", withExtension: "json"),
             let data = try? Data(contentsOf: url) else {
-            completion(FlowResponse.failure(error: FlowError.generic))
+            completion(FCLResponse.failure(error: FCLError.generic))
             return
         }
 
@@ -194,9 +200,9 @@ public final class FCL: NSObject {
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
             decoder.dateDecodingStrategy = .formatted(dateFormatter)
             let response = try decoder.decode(NFTResponse.self, from: data)
-            completion(FlowResponse.success(result: response))
+            completion(FCLResponse.success(result: response))
         } catch {
-            completion(FlowResponse.failure(error: FlowError.invalidResponse))
+            completion(FCLResponse.failure(error: FCLError.invalidResponse))
         }
     }
 }
