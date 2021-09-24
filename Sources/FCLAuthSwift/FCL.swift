@@ -8,7 +8,7 @@
 import AuthenticationServices
 import Foundation
 
-public class FCL: NSObject {
+public final class FCL: NSObject {
     public static let shared = FCL()
     public var delegate: FlowAuthDelegate?
     private var canContinue = true
@@ -20,6 +20,8 @@ public class FCL: NSObject {
         appData = app
         walletProviders = providers
     }
+
+    // MARK: - Authenticate
 
     public func authenticate(providerID: String, completion: @escaping (FlowResponse<FlowData>) -> Void) {
         guard let provider = walletProviders.filter({ $0.service.id == providerID }).first else {
@@ -152,6 +154,8 @@ public class FCL: NSObject {
         }
     }
 
+    // MARK: - Session
+
     private func openAuthenticationSession(url: URL) {
         DispatchQueue.main.async {
             self.delegate?.hideLoading()
@@ -170,6 +174,29 @@ public class FCL: NSObject {
     private func closeSession() {
         DispatchQueue.main.async {
             self.session?.cancel()
+        }
+    }
+
+    // MARK: - NFTs
+
+    // TODO: It is a mock func for now, just for demo purpose
+    // Will update this when API is available
+    public func fetchNFTs(address _: String, completion: @escaping (FlowResponse<NFTResponse>) -> Void) {
+        guard let url = Bundle.module.url(forResource: "nft-mock", withExtension: "json"),
+            let data = try? Data(contentsOf: url) else {
+            completion(FlowResponse.failure(error: FlowError.generic))
+            return
+        }
+
+        do {
+            let decoder = JSONDecoder()
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+            decoder.dateDecodingStrategy = .formatted(dateFormatter)
+            let response = try decoder.decode(NFTResponse.self, from: data)
+            completion(FlowResponse.success(result: response))
+        } catch {
+            completion(FlowResponse.failure(error: FlowError.invalidResponse))
         }
     }
 }

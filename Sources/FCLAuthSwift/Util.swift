@@ -19,7 +19,7 @@ extension FlowAuthDelegate {
     }
 }
 
-public enum FlowResponse<T: Codable> {
+public enum FlowResponse<T: Decodable> {
     case failure(error: Error)
     case success(result: T)
 

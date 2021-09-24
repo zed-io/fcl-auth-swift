@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		15BDD48D26FD699500659FD2 /* FlowAuthenticationService in Frameworks */ = {isa = PBXBuildFile; productRef = 15BDD48C26FD699500659FD2 /* FlowAuthenticationService */; };
+		15A074A526FD7FFA00FC1444 /* FCLAuthSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 15A074A426FD7FFA00FC1444 /* FCLAuthSwift */; };
 		15E2F15D26DD07C900FA19BD /* FCLDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E2F15C26DD07C900FA19BD /* FCLDemoApp.swift */; };
 		15E2F15F26DD07C900FA19BD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E2F15E26DD07C900FA19BD /* ContentView.swift */; };
 		15E2F16126DD07CB00FA19BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 15E2F16026DD07CB00FA19BD /* Assets.xcassets */; };
@@ -16,7 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		15BDD48B26FD696C00659FD2 /* FlowAuthenticationService */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FlowAuthenticationService; path = ..; sourceTree = "<group>"; };
+		1503AB6F26FD7F2300EA1820 /* fcl-auth-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "fcl-auth-swift"; path = ..; sourceTree = "<group>"; };
 		15E2F15926DD07C900FA19BD /* FCLDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FCLDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		15E2F15C26DD07C900FA19BD /* FCLDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLDemoApp.swift; sourceTree = "<group>"; };
 		15E2F15E26DD07C900FA19BD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -31,7 +31,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				15BDD48D26FD699500659FD2 /* FlowAuthenticationService in Frameworks */,
+				15A074A526FD7FFA00FC1444 /* FCLAuthSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,7 +41,7 @@
 		15E2F15026DD07C900FA19BD = {
 			isa = PBXGroup;
 			children = (
-				15BDD48B26FD696C00659FD2 /* FlowAuthenticationService */,
+				1503AB6F26FD7F2300EA1820 /* fcl-auth-swift */,
 				15E2F15B26DD07C900FA19BD /* FCLDemo */,
 				15E2F15A26DD07C900FA19BD /* Products */,
 				15E2F17226DD0B0600FA19BD /* Frameworks */,
@@ -101,7 +101,7 @@
 			);
 			name = FCLDemo;
 			packageProductDependencies = (
-				15BDD48C26FD699500659FD2 /* FlowAuthenticationService */,
+				15A074A426FD7FFA00FC1444 /* FCLAuthSwift */,
 			);
 			productName = FCLDemo;
 			productReference = 15E2F15926DD07C900FA19BD /* FCLDemo.app */;
@@ -351,9 +351,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		15BDD48C26FD699500659FD2 /* FlowAuthenticationService */ = {
+		15A074A426FD7FFA00FC1444 /* FCLAuthSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = FlowAuthenticationService;
+			productName = FCLAuthSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

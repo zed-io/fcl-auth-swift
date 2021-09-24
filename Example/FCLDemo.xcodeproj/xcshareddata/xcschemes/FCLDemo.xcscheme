@@ -28,10 +28,24 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FlowAuthentication"
-               BuildableName = "FlowAuthentication"
-               BlueprintName = "FlowAuthentication"
-               ReferencedContainer = "container:../FlowAuthentication">
+               BlueprintIdentifier = "FCLAuthSwift"
+               BuildableName = "FCLAuthSwift"
+               BlueprintName = "FCLAuthSwift"
+               ReferencedContainer = "container:..">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "FCLAuthSwiftTests"
+               BuildableName = "FCLAuthSwiftTests"
+               BlueprintName = "FCLAuthSwiftTests"
+               ReferencedContainer = "container:..">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

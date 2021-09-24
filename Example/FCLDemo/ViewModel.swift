@@ -5,7 +5,7 @@
 //  Created by lmcmz on 30/8/21.
 //
 
-import FlowAuthenticationService
+import FCLAuthSwift
 import Foundation
 import UIKit
 

@@ -1,4 +1,4 @@
-# FlowAuthenticationService
+# fcl-auth-swift
 
 The Flow Authentication Service is a Swift library for Flow (https://www.onflow.org).
 
@@ -13,7 +13,7 @@ You will need to config the appinfo before you use the authentication service
 
 ```swift
 
-import FlowAuthenticationService
+import FCLAuthSwift
 
 FCL.shared.config(app: FlowAppData(title: "FCL Demo",
                                    icon: URL(string: "https://foo.com/bar.png")!),
