@@ -30,7 +30,7 @@ class ViewModel: ObservableObject {
 
     @Published var videoURL: URL? = nil
 
-    @Published var nfts: [NFTModel] = []
+    @Published var nfts: [NFT] = []
 
     init() {
         FCL.shared.delegate = self
@@ -85,7 +85,9 @@ class ViewModel: ObservableObject {
     }
 
     func fetchNFTs() {
-        FCL.shared.fetchNFTs(address: address) { result in
+        let apiClient = NFTAPIClient()
+        
+        apiClient.listNFTsForAddress(address: address) { result in
             result.whenSuccess { response in
                 self.nfts = response.nfts
             }
