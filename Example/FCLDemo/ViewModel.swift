@@ -23,15 +23,21 @@ class ViewModel: ObservableObject {
 
     init() {
         FCL.shared.delegate = self
-        let service = FlowWalletService(id: "foo",
-                                        name: "bar",
-                                        method: .post,
-                                        endpoint: URL(string: "https://dapper-http-post.vercel.app/api/")!)
+        let service = FlowWalletService(
+            id: "foo",
+            name: "bar",
+            method: .post,
+            endpoint: URL(string: "https://dapper-http-post.vercel.app/api/")!
+        )
 
-        FCL.shared.config(app: FlowAppData(title: "FCL Demo",
-                                           icon: URL(string: "https://foo.com/bar.png")!),
-                          // default provider is  [.dapper, .blocto]
-                          providers: [.dapper, .blocto, .custom(service)])
+        FCL.shared.config(
+            app: FlowAppData(
+                title: "FCL iOS Demo",
+                icon: URL(string: "https://foo.com/bar.png")!
+            ),
+            // default provider is  [.dapper, .blocto]
+            providers: [.dapper, .blocto, .custom(service)]
+        )
     }
 
     func authn() {
