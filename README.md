@@ -5,7 +5,7 @@ that enables Flow wallet authentication on iOS devices.
 
 ## Installation
 
-- [Swift Package Manager](https://swift.org/package-manager/)):
+- [Swift Package Manager](https://swift.org/package-manager/):
 
 ```swift
 dependencies: [
