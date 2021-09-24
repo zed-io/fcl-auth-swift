@@ -1,27 +1,42 @@
 # fcl-auth-swift
 
-`FCLAuthSwift` is a Swift library for the [Flow Client Library (FCL)](https://docs.onflow.org/fcl/) that enables Flow wallet authentication on iOS devices.
+`FCLAuthSwift` is a Swift library for the [Flow Client Library (FCL)](https://docs.onflow.org/fcl/)
+that enables Flow wallet authentication on iOS devices.
 
 ## Installation
 
-This library is a Swift package that can be installed via Xcode with the URL of this repository:
+- (Swift Package Manager](https://swift.org/package-manager/)):
 
-`https://github.com/zed-io/fcl-auth-swift.git`
+```swift
+dependencies: [
+  .package(url: "https://github.com/zed-io/fcl-auth-swift.git", from: "0.0.1")
+]
+```
 
 ## Configuration
 
-You will need to configure your app information before you use the authentication library:
+You will need to configure your app information before using the authentication library.
+
+`FCLAuthSwift` ships with several built-in wallet providers (Dapper, Blocto),
+but you can also define custom wallet providers if needed.
 
 ```swift
-
 import FCLAuthSwift
 
+// optional: define a custom wallet provider
+let service = FlowWalletService(
+    id: "foo",
+    name: "bar",
+    method: .post,
+    endpoint: URL(string: "https://foo.com/api/")!
+)
+        
 FCL.shared.config(
     app: FlowAppData(
         title: "FCL iOS Demo",
         icon: URL(string: "https://foo.com/bar.png")!
     ),
-    // default providers are  [.dapper, .blocto]
+    // default providers are [.dapper, .blocto]
     providers: [.dapper, .blocto, .custom(service)]
 )
 ```

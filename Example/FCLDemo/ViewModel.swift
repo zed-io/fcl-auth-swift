@@ -23,6 +23,7 @@ class ViewModel: ObservableObject {
 
     init() {
         FCL.shared.delegate = self
+        
         let service = FlowWalletService(
             id: "foo",
             name: "bar",
