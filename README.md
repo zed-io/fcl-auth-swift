@@ -24,20 +24,20 @@ but you can also define custom wallet providers if needed.
 import FCLAuthSwift
 
 // optional: define a custom wallet provider
-let service = FlowWalletService(
+let provider = FCLWalletProvider(
     id: "foo",
     name: "bar",
-    method: .post,
+    method: .httpPost,
     endpoint: URL(string: "https://foo.com/api/")!
 )
         
 FCL.shared.config(
-    app: FlowAppData(
+    appInfo: FCLAppInfo(
         title: "FCL iOS Demo",
         icon: URL(string: "https://foo.com/bar.png")!
     ),
     // default providers are [.dapper, .blocto]
-    providers: [.dapper, .blocto, .custom(service)]
+    providers: [.dapper, .blocto, .custom(provider)]
 )
 ```
 
@@ -47,10 +47,18 @@ FCL.shared.config(
 FCL.shared.authenticate(provider: .dapper) { result in
     switch result {
     case let .success(data):
-        print(data)
+        print(data.address)
     case let .failure(error):
         print(error)
     }
+}
+```
+
+The `data` variable is of type `FCLAuthnResponse`, which contains the user's wallet address:
+
+```swift
+public struct FCLAuthnResponse: Decodable {
+    public let address: String
 }
 ```
 
@@ -61,14 +69,14 @@ The authentication library has an optional delegate to handle custom events or s
 ```swift
 FCL.shared.delegate = self
 
-public protocol FlowAuthDelegate {
+public protocol FCLAuthDelegate {
     // Show loading while waiting for network response
     func showLoading()
-    // Hide loading when api call is completed 
+    // Hide loading when API call is completed 
     func hideLoading()
 }
 
-extension FlowAuthDelegate {
+extension FCLAuthDelegate {
     // Configure which place to show authentication webview
     // The default value is ASPresentationAnchor()
     func presentationAnchor() -> UIWindow {
