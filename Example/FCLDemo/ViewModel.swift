@@ -45,18 +45,19 @@ class ViewModel: ObservableObject {
         FCL.shared.config(
             appInfo: FCLAppInfo(
                 title: "FCL iOS Demo",
-                icon: URL(string: "https://foo.com/bar.png")!
+                icon: URL(string: "https://foo.com/bar.png")!,
+                location: URL(string: "https://foo.com")!
             ),
             // default provider is  [.dapper, .blocto]
             providers: [.dapper, .blocto, .custom(provider)]
         )
     }
 
-    func authn() {
+    func authn(provider: FCLProvider) {
         // Style 1
         // default provider is dapper
         // FCL.shared.authenticate { result in
-        FCL.shared.authenticate(provider: .dapper) { result in
+        FCL.shared.authenticate(provider: provider) { result in
             DispatchQueue.main.async {
                 switch result {
                 case let .success(data):

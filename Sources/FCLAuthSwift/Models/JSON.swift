@@ -30,7 +30,7 @@ struct AuthnResponse: Decodable {
 
 struct AuthnData: Decodable {
     public let addr: String?
-    public let fType: String
+    public let fType: String?
     public let fVsn: String?
     public let services: [Service]?
     public let proposer: Service?
@@ -49,17 +49,18 @@ struct Service: Decodable {
     let fType: String?
     let fVsn: String?
     let type: FCLServiceType?
-    let method: FCLServiceMethod
-    let endpoint: String
+    let method: FCLServiceMethod?
+    let endpoint: URL?
     let uid: String?
     let id: String?
     public let identity: Identity?
     public let provider: Provider?
+    public let params: [String: String]?
 }
 
 struct Identity: Decodable {
     public let address: String
-    let keyId: Int
+    let keyId: Int?
 }
 
 struct Provider: Decodable {
