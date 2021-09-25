@@ -9,7 +9,7 @@ that enables Flow wallet authentication on iOS devices.
 
 ```swift
 dependencies: [
-  .package(url: "https://github.com/zed-io/fcl-auth-swift.git", from: "0.0.2-beta")
+  .package(url: "https://github.com/zed-io/fcl-auth-swift.git", from: "0.0.3-beta")
 ]
 ```
 
