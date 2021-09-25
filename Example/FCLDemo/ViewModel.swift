@@ -85,7 +85,7 @@ class ViewModel: ObservableObject {
     }
 
     func fetchNFTs() {
-        let apiClient = NFTAPIClient()
+        let apiClient = NFTAPIClient(url: URL(string: "https://flow-nft-api-mock.vercel.app/api/v1/nfts")!)
         
         apiClient.listNFTsForAddress(address: address) { result in
             result.whenSuccess { response in

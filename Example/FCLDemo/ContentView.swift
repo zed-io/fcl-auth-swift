@@ -36,10 +36,10 @@ struct ContentView: View {
                             ForEach(viewModel.nfts, id: \.self) { nft in
                                 Button(action: {
                                     viewModel.isPlayVideo.toggle()
-                                    viewModel.videoURL = nft.metadata.image.black
+                                    viewModel.videoURL = nft.metadata.topShotImages.black
                                 }) {
                                     VStack {
-                                        AsyncImage(url: nft.metadata.image.hero) { image in
+                                        AsyncImage(url: nft.metadata.image) { image in
                                             image.resizable()
                                         } placeholder: {
                                             ProgressView()
@@ -48,7 +48,7 @@ struct ContentView: View {
                                         .cornerRadius(30)
                                         .padding(10)
 
-                                        Text(nft.metadata.play.stats.playerName)
+                                        Text(nft.metadata.title)
                                     }
                                 }
                             }

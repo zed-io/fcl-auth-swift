@@ -14,7 +14,6 @@
 		15E2F17626DD133800FA19BD /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E2F17526DD133800FA19BD /* ViewModel.swift */; };
 		67DFFADA26FE8A7000136000 /* FCLDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E2F15C26DD07C900FA19BD /* FCLDemoApp.swift */; };
 		67DFFADD26FE8B7B00136000 /* NFTAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DFFADB26FE8B7B00136000 /* NFTAPI.swift */; };
-		67DFFADF26FE8D1300136000 /* nft-api-mock.json in Resources */ = {isa = PBXBuildFile; fileRef = 67DFFADC26FE8B7B00136000 /* nft-api-mock.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +26,6 @@
 		15E2F16526DD07CB00FA19BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		15E2F17526DD133800FA19BD /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		67DFFADB26FE8B7B00136000 /* NFTAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTAPI.swift; sourceTree = "<group>"; };
-		67DFFADC26FE8B7B00136000 /* nft-api-mock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "nft-api-mock.json"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,7 +61,6 @@
 		15E2F15B26DD07C900FA19BD /* FCLDemo */ = {
 			isa = PBXGroup;
 			children = (
-				67DFFADC26FE8B7B00136000 /* nft-api-mock.json */,
 				67DFFADB26FE8B7B00136000 /* NFTAPI.swift */,
 				15E2F15C26DD07C900FA19BD /* FCLDemoApp.swift */,
 				15E2F15E26DD07C900FA19BD /* ContentView.swift */,
@@ -152,7 +149,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67DFFADF26FE8D1300136000 /* nft-api-mock.json in Resources */,
 				15E2F16426DD07CB00FA19BD /* Preview Assets.xcassets in Resources */,
 				15E2F16126DD07CB00FA19BD /* Assets.xcassets in Resources */,
 			);
