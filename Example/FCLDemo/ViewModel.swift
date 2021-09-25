@@ -34,7 +34,7 @@ class ViewModel: ObservableObject {
 
     init() {
         FCL.shared.delegate = self
-        
+
         let provider = FCLWalletProvider(
             id: "foo",
             name: "bar",
@@ -69,19 +69,19 @@ class ViewModel: ObservableObject {
         }
 
         // Style 2
-//        FCL.shared.authenticate(providerID: "foo") { response in
-//            response.whenSuccess { data in
-//                DispatchQueue.main.async {
-//                    self.address = data.address
-//                }
-//            }
-//
-//            response.whenFailure { error in
-//                DispatchQueue.main.async {
-//                    self.address = error.localizedDescription
-//                }
-//            }
-//        }
+        // FCL.shared.authenticate(providerID: "foo") { response in
+        //    response.whenSuccess { data in
+        //        DispatchQueue.main.async {
+        //            self.address = data.address
+        //        }
+        //    }
+
+        //    response.whenFailure { error in
+        //        DispatchQueue.main.async {
+        //            self.address = error.localizedDescription
+        //        }
+        //    }
+        // }
     }
 
     func fetchNFTs() {
