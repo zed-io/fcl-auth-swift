@@ -55,7 +55,7 @@ public final class FCL: NSObject {
             completion(FCLResponse.failure(error: FCLError.missingWalletService))
             return
         }
-        
+
         print(provider)
         print(provider.provider.endpoint)
 
@@ -78,7 +78,7 @@ public final class FCL: NSObject {
     private func fetchService(url: URL, completion: @escaping (FCLResponse<AuthnResponse>) -> Void) {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        
+
         // TODO: Need to check extract config
         let config = URLSessionConfiguration.default
         let task = URLSession(configuration: config).dataTask(with: request) { data, response, error in
@@ -177,13 +177,13 @@ public final class FCL: NSObject {
         DispatchQueue.main.async {
             self.delegate?.hideLoading()
             let session = ASWebAuthenticationSession(url: url,
-                                                     callbackURLScheme: "fclDemo") { _, _ in
+                                                     callbackURLScheme: nil) { _, _ in
                 self.canContinue = false
             }
             self.session = session
             session.presentationContextProvider = self
             // TODO: Need to check this
-            // session.prefersEphemeralWebBrowserSession = true
+            session.prefersEphemeralWebBrowserSession = true
             session.start()
         }
     }

@@ -42,7 +42,6 @@ public enum FCLServiceType: String, Decodable {
     case backChannel = "back-channel-rpc"
 }
 
-
 public enum FCLResponse<T: Decodable> {
     case failure(error: Error)
     case success(result: T)
