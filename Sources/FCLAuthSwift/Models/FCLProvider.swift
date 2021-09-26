@@ -34,8 +34,7 @@ public enum FCLProvider: Equatable {
             return FCLWalletProvider(id: "blocto",
                                      name: "Blocto",
                                      method: .httpPost,
-                                     // TODO: replace with Blocto endpoint
-                                     endpoint: URL(string: "https://dapper-http-post.vercel.app/api/authn")!)
+                                     endpoint: URL(string: "https://flow-wallet.blocto.app/api/flow/authn")!)
         case let .custom(provider):
             return provider
         }

@@ -20,6 +20,7 @@ import AuthenticationServices
 import Foundation
 
 public final class FCL: NSObject {
+    
     public static let shared = FCL()
     public var delegate: FCLAuthDelegate?
     private var canContinue = true
@@ -56,10 +57,7 @@ public final class FCL: NSObject {
             return
         }
 
-        print(provider)
-        print(provider.provider.endpoint)
-
-        execHttpPost(url: provider.provider.endpoint) { response in
+        execHTTPPost(url: provider.provider.endpoint) { response in
             response.whenSuccess { result in
                 guard let address = result.data?.addr else {
                     completion(FCLResponse.failure(error: FCLError.invalidResponse))
@@ -75,14 +73,20 @@ public final class FCL: NSObject {
         }
     }
 
-    private func fetchService(url: URL, completion: @escaping (FCLResponse<AuthnResponse>) -> Void) {
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+    private func fetchService(url: URL,
+                              method: String,
+                              params: [String: String] = [:],
+                              completion: @escaping (FCLResponse<AuthnResponse>) -> Void) {
+        
+        let fullURL = self.buildURL(url: url, params: params)
+                        
+        var request = URLRequest(url: fullURL)
+        request.httpMethod = method
 
         // TODO: Need to check extract config
         let config = URLSessionConfiguration.default
         let task = URLSession(configuration: config).dataTask(with: request) { data, response, error in
-
+            
             if let error = error {
                 completion(FCLResponse.failure(error: error))
                 return
@@ -105,11 +109,12 @@ public final class FCL: NSObject {
         task.resume()
     }
 
-    private func execHttpPost(url: URL, completion: @escaping (FCLResponse<AuthnResponse>) -> Void) {
+    private func execHTTPPost(url: URL, completion: @escaping (FCLResponse<AuthnResponse>) -> Void) {
         DispatchQueue.main.async {
             self.delegate?.showLoading()
         }
-        fetchService(url: url) { response in
+        
+        fetchService(url: url, method: "POST") { response in
             response.whenSuccess { result in
                 switch result.status {
                 case .approved:
@@ -122,11 +127,7 @@ public final class FCL: NSObject {
                         completion(FCLResponse.failure(error: FCLError.generic))
                         return
                     }
-                    guard let url = URL(string: local.endpoint) else {
-                        completion(FCLResponse.failure(error: FCLError.urlInvaild))
-                        return
-                    }
-                    self.openAuthenticationSession(url: url)
+                    self.openAuthenticationSession(service: local)
                     self.poll(service: updates) { response in
                         completion(response)
                     }
@@ -145,14 +146,13 @@ public final class FCL: NSObject {
             return
         }
 
-        guard let url = URL(string: service.endpoint) else {
+        guard let url = service.endpoint else {
             completion(FCLResponse.failure(error: FCLError.urlInvaild))
             return
         }
 
-        fetchService(url: url) { response in
+        fetchService(url: url, method: "GET", params: service.params!) { response in
             response.whenSuccess { result in
-                print("polling ---> \(result.status.rawValue)")
                 switch result.status {
                 case .approved:
                     self.closeSession()
@@ -173,7 +173,9 @@ public final class FCL: NSObject {
 
     // MARK: - Session
 
-    private func openAuthenticationSession(url: URL) {
+    private func openAuthenticationSession(service: Service) {
+        let url = self.buildURL(url: service.endpoint!, params: service.params!)
+                
         DispatchQueue.main.async {
             self.delegate?.hideLoading()
             let session = ASWebAuthenticationSession(url: url,
@@ -186,6 +188,26 @@ public final class FCL: NSObject {
             session.prefersEphemeralWebBrowserSession = true
             session.start()
         }
+    }
+    
+    private func buildURL(url: URL, params: [String: String]) -> URL {
+        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+        
+        var queryItems = [
+            URLQueryItem(name: paramLocation, value: self.appInfo!.location.absoluteString)
+        ]
+        
+        for (name, value) in params {
+            if (name != paramLocation) {
+                queryItems.append(
+                    URLQueryItem(name: name, value: value)
+                )
+            }
+        }
+        
+        urlComponents.queryItems = queryItems
+        
+        return urlComponents.url!
     }
 
     private func closeSession() {

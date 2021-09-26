@@ -21,10 +21,12 @@ import Foundation
 public struct FCLAppInfo {
     public let title: String
     public let icon: URL
+    public let location: URL
 
-    public init(title: String, icon: URL) {
+    public init(title: String, icon: URL, location: URL) {
         self.title = title
         self.icon = icon
+        self.location = location
     }
 }
 
@@ -32,6 +34,8 @@ public enum FCLServiceMethod: String, Decodable {
     case httpPost = "HTTP/POST"
     case httpGet = "HTTP/GET"
     case iframe = "VIEW/IFRAME"
+    case iframeRPC = "IFRAME/RPC"
+    case data = "DATA"
 }
 
 public enum FCLServiceType: String, Decodable {
@@ -40,7 +44,11 @@ public enum FCLServiceType: String, Decodable {
     case preAuthz = "pre-authz"
     case userSignature = "user-signature"
     case backChannel = "back-channel-rpc"
+    case localView = "local-view"
+    case openID = "open-id"
 }
+
+public let paramLocation = "l6n"
 
 public enum FCLResponse<T: Decodable> {
     case failure(error: Error)

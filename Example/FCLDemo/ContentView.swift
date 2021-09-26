@@ -66,18 +66,20 @@ struct ContentView: View {
         }
     }
 
-    fileprivate func authenticate() -> Section<EmptyView, TupleView<(HStack<TupleView<(Button<Text>, Spacer, ProgressView<EmptyView, EmptyView>?)>>, Text)>, EmptyView> {
+    fileprivate func authenticate() -> some View {
         return Section {
-            HStack {
-                Button("Auth") {
-                    viewModel.authn()
-                }
-                Spacer()
-                if viewModel.isLoading {
-                    ProgressView()
-                }
+            Button("Log in with Dapper") {
+                viewModel.authn(provider: .dapper)
             }
-            Text(verbatim: viewModel.address)
+            Button("Log in with Blocto") {
+                viewModel.authn(provider: .blocto)
+            }
+            
+            if viewModel.isLoading {
+                ProgressView()
+            } else {
+                Text(verbatim: viewModel.address)
+            }
         }
     }
 }
