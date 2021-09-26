@@ -31,7 +31,7 @@ let provider = FCLWalletProvider(
     endpoint: URL(string: "https://foo.com/api/")!
 )
         
-FCL.shared.config(
+fcl.config(
     appInfo: FCLAppInfo(
         title: "FCL iOS Demo",
         icon: URL(string: "https://foo.com/bar.png")!
@@ -44,7 +44,7 @@ FCL.shared.config(
 ## Authenticate 
 
 ```swift
-FCL.shared.authenticate(provider: .dapper) { result in
+fcl.authenticate(provider: .dapper) { result in
     switch result {
     case let .success(data):
         print(data.address)
@@ -57,7 +57,7 @@ FCL.shared.authenticate(provider: .dapper) { result in
 The `data` variable is of type `FCLAuthnResponse`, which contains the user's wallet address:
 
 ```swift
-public struct FCLAuthnResponse: Decodable {
+public struct FCLAuthnResponse {
     public let address: String
 }
 ```
@@ -67,7 +67,7 @@ public struct FCLAuthnResponse: Decodable {
 The authentication library has an optional delegate to handle custom events or settings. 
 
 ```swift
-FCL.shared.delegate = self
+fcl.delegate = self
 
 public protocol FCLAuthDelegate {
     // Show loading while waiting for network response

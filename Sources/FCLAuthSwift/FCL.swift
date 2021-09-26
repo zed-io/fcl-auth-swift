@@ -19,8 +19,9 @@
 import AuthenticationServices
 import Foundation
 
+public let fcl = FCL.shared
+
 public final class FCL: NSObject {
-    
     public static let shared = FCL()
     public var delegate: FCLAuthDelegate?
     private var canContinue = true
@@ -38,62 +39,63 @@ public final class FCL: NSObject {
 
     // MARK: - Authenticate
 
-    public func authenticate(providerID: String, completion: @escaping (FCLResponse<FCLAuthnResponse>) -> Void) {
+    public func authenticate(providerID: String, completion: @escaping (Result<FCLAuthnResponse, Error>) -> Void) {
         guard let provider = providers.filter({ $0.provider.id == providerID }).first else {
-            completion(FCLResponse.failure(error: FCLError.missingWalletService))
+            completion(Result.failure(FCLError.missingWalletService))
             return
         }
         authenticate(provider: provider, completion: completion)
     }
 
-    public func authenticate(provider: FCLProvider = .dapper, completion: @escaping (FCLResponse<FCLAuthnResponse>) -> Void) {
+    public func authenticate(provider: FCLProvider = .dapper, completion: @escaping (Result<FCLAuthnResponse, Error>) -> Void) {
         guard let _ = appInfo else {
-            completion(FCLResponse.failure(error: FCLError.missingAppInfo))
+            completion(Result.failure(FCLError.missingAppInfo))
             return
         }
 
         guard providers.contains(provider) else {
-            completion(FCLResponse.failure(error: FCLError.missingWalletService))
+            completion(Result.failure(FCLError.missingWalletService))
             return
         }
 
         execHTTPPost(url: provider.provider.endpoint) { response in
-            response.whenSuccess { result in
+            switch response {
+            case let .success(result):
                 guard let address = result.data?.addr else {
-                    completion(FCLResponse.failure(error: FCLError.invalidResponse))
+                    completion(Result.failure(FCLError.invalidResponse))
                     return
                 }
                 let result = FCLAuthnResponse(address: address)
-                completion(FCLResponse.success(result: result))
-            }
-
-            response.whenFailure { error in
-                completion(FCLResponse.failure(error: error))
+                completion(Result.success(result))
+            case let .failure(error):
+                completion(Result.failure(error))
             }
         }
     }
 
     private func fetchService(url: URL,
                               method: String,
-                              params: [String: String] = [:],
-                              completion: @escaping (FCLResponse<AuthnResponse>) -> Void) {
-        
-        let fullURL = self.buildURL(url: url, params: params)
-                        
+                              params: [String: String]? = [:],
+                              completion: @escaping (Result<AuthnResponse, Error>) -> Void) {
+        guard let fullURL = self.buildURL(url: url, params: params) else {
+            completion(Result.failure(FCLError.invaildURL))
+            return
+        }
+
         var request = URLRequest(url: fullURL)
         request.httpMethod = method
 
         // TODO: Need to check extract config
         let config = URLSessionConfiguration.default
         let task = URLSession(configuration: config).dataTask(with: request) { data, response, error in
-            
+
             if let error = error {
-                completion(FCLResponse.failure(error: error))
+                completion(Result.failure(error))
                 return
             }
 
             guard let data = data else {
-                completion(FCLResponse.failure(error: FCLError.invalidResponse))
+                completion(Result.failure(FCLError.invalidResponse))
                 return
             }
 
@@ -101,64 +103,68 @@ public final class FCL: NSObject {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let response = try decoder.decode(AuthnResponse.self, from: data)
-                completion(FCLResponse.success(result: response))
+                completion(Result.success(response))
             } catch {
-                completion(FCLResponse.failure(error: error))
+                completion(Result.failure(error))
             }
         }
         task.resume()
     }
 
-    private func execHTTPPost(url: URL, completion: @escaping (FCLResponse<AuthnResponse>) -> Void) {
+    private func execHTTPPost(url: URL, completion: @escaping (Result<AuthnResponse, Error>) -> Void) {
         DispatchQueue.main.async {
             self.delegate?.showLoading()
         }
-        
+
         fetchService(url: url, method: "POST") { response in
-            response.whenSuccess { result in
+
+            switch response {
+            case let .success(result):
                 switch result.status {
                 case .approved:
                     completion(response)
                 case .declined:
-                    completion(FCLResponse.failure(error: FCLError.declined))
+                    completion(Result.failure(FCLError.declined))
                 case .pending:
                     self.canContinue = true
                     guard let local = result.local, let updates = result.updates else {
-                        completion(FCLResponse.failure(error: FCLError.generic))
+                        completion(Result.failure(FCLError.generic))
                         return
                     }
-                    self.openAuthenticationSession(service: local)
+                    do {
+                        try self.openAuthenticationSession(service: local)
+                    } catch {
+                        completion(Result.failure(error))
+                    }
                     self.poll(service: updates) { response in
                         completion(response)
                     }
                 }
-            }
-
-            response.whenFailure { error in
-                completion(FCLResponse.failure(error: error))
+            case let .failure(error):
+                completion(Result.failure(error))
             }
         }
     }
 
-    private func poll(service: Service, completion: @escaping (FCLResponse<AuthnResponse>) -> Void) {
+    private func poll(service: Service, completion: @escaping (Result<AuthnResponse, Error>) -> Void) {
         if !canContinue {
-            completion(FCLResponse.failure(error: FCLError.declined))
+            completion(Result.failure(FCLError.declined))
             return
         }
 
         guard let url = service.endpoint else {
-            completion(FCLResponse.failure(error: FCLError.urlInvaild))
+            completion(Result.failure(FCLError.invaildURL))
             return
         }
 
-        fetchService(url: url, method: "GET", params: service.params!) { response in
-            response.whenSuccess { result in
+        fetchService(url: url, method: "GET", params: service.params) { response in
+            if case let .success(result) = response {
                 switch result.status {
                 case .approved:
                     self.closeSession()
                     completion(response)
                 case .declined:
-                    completion(FCLResponse.failure(error: FCLError.declined))
+                    completion(Result.failure(FCLError.declined))
                 case .pending:
                     // TODO: Improve this
                     DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(500)) {
@@ -168,14 +174,21 @@ public final class FCL: NSObject {
                     }
                 }
             }
+
+            if case let .failure(error) = response {
+                completion(Result.failure(error))
+            }
         }
     }
 
     // MARK: - Session
 
-    private func openAuthenticationSession(service: Service) {
-        let url = self.buildURL(url: service.endpoint!, params: service.params!)
-                
+    private func openAuthenticationSession(service: Service) throws {
+        guard let endpoint = service.endpoint,
+            let url = self.buildURL(url: endpoint, params: service.params) else {
+            throw FCLError.invalidSession
+        }
+
         DispatchQueue.main.async {
             self.delegate?.hideLoading()
             let session = ASWebAuthenticationSession(url: url,
@@ -189,25 +202,28 @@ public final class FCL: NSObject {
             session.start()
         }
     }
-    
-    private func buildURL(url: URL, params: [String: String]) -> URL {
-        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)!
-        
-        var queryItems = [
-            URLQueryItem(name: paramLocation, value: self.appInfo!.location.absoluteString)
-        ]
-        
-        for (name, value) in params {
-            if (name != paramLocation) {
+
+    private func buildURL(url: URL, params: [String: String]?) -> URL? {
+        guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            return nil
+        }
+
+        var queryItems: [URLQueryItem] = []
+
+        if let location = self.appInfo?.location.absoluteString {
+            queryItems.append(URLQueryItem(name: paramLocation, value: location))
+        }
+
+        for (name, value) in params ?? [:] {
+            if name != paramLocation {
                 queryItems.append(
                     URLQueryItem(name: name, value: value)
                 )
             }
         }
-        
+
         urlComponents.queryItems = queryItems
-        
-        return urlComponents.url!
+        return urlComponents.url
     }
 
     private func closeSession() {

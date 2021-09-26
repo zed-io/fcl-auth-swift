@@ -20,7 +20,7 @@
 import XCTest
 
 final class FCLAuthSwiftTests: XCTestCase {
-    func testNFTDecode() {
+    func testFCL() {
         // TODO:
     }
 }

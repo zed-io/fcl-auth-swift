@@ -33,7 +33,7 @@ class ViewModel: ObservableObject {
     @Published var nfts: [NFT] = []
 
     init() {
-        FCL.shared.delegate = self
+        fcl.delegate = self
 
         let provider = FCLWalletProvider(
             id: "foo",
@@ -42,7 +42,7 @@ class ViewModel: ObservableObject {
             endpoint: URL(string: "https://dapper-http-post.vercel.app/api/authn")!
         )
 
-        FCL.shared.config(
+        fcl.config(
             appInfo: FCLAppInfo(
                 title: "FCL iOS Demo",
                 icon: URL(string: "https://foo.com/bar.png")!,
@@ -54,10 +54,8 @@ class ViewModel: ObservableObject {
     }
 
     func authn(provider: FCLProvider) {
-        // Style 1
-        // default provider is dapper
-        // FCL.shared.authenticate { result in
-        FCL.shared.authenticate(provider: provider) { result in
+        // Default provider is dapper
+        fcl.authenticate(provider: provider) { result in
             DispatchQueue.main.async {
                 switch result {
                 case let .success(data):
@@ -68,32 +66,18 @@ class ViewModel: ObservableObject {
                 }
             }
         }
-
-        // Style 2
-        // FCL.shared.authenticate(providerID: "foo") { response in
-        //    response.whenSuccess { data in
-        //        DispatchQueue.main.async {
-        //            self.address = data.address
-        //        }
-        //    }
-
-        //    response.whenFailure { error in
-        //        DispatchQueue.main.async {
-        //            self.address = error.localizedDescription
-        //        }
-        //    }
-        // }
     }
 
     func fetchNFTs() {
         let apiClient = NFTAPIClient(url: URL(string: "https://flow-nft-api-mock.vercel.app/api/v1/nfts")!)
-        
         apiClient.listNFTsForAddress(address: address) { result in
-            result.whenSuccess { response in
-                self.nfts = response.nfts
-            }
-
-            result.whenFailure { _ in
+            DispatchQueue.main.async {
+                switch result {
+                case let .success(response):
+                    self.nfts = response.nfts
+                case let .failure(error):
+                    print(error)
+                }
             }
         }
     }

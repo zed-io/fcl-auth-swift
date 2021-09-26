@@ -20,9 +20,10 @@ import Foundation
 
 public enum FCLError: String, Error, LocalizedError {
     case generic
-    case urlInvaild
+    case invaildURL
     case declined
     case invalidResponse
+    case invalidSession
     case decodeFailure
     case unauthenticated
     case missingAppInfo

@@ -74,7 +74,7 @@ struct ContentView: View {
             Button("Log in with Blocto") {
                 viewModel.authn(provider: .blocto)
             }
-            
+
             if viewModel.isLoading {
                 ProgressView()
             } else {
