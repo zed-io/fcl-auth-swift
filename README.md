@@ -57,7 +57,7 @@ fcl.authenticate(provider: .dapper) { result in
 The `data` variable is of type `FCLAuthnResponse`, which contains the user's wallet address:
 
 ```swift
-public struct FCLAuthnResponse: Decodable {
+public struct FCLAuthnResponse {
     public let address: String
 }
 ```
