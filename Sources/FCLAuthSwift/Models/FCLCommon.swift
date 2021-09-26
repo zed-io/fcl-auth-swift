@@ -50,24 +50,7 @@ public enum FCLServiceType: String, Decodable {
 
 public let paramLocation = "l6n"
 
-public enum FCLResponse<T: Decodable> {
-    case failure(error: Error)
-    case success(result: T)
-
-    public func whenSuccess(completion: @escaping (T) -> Void) {
-        if case let .success(result) = self {
-            completion(result)
-        }
-    }
-
-    public func whenFailure(completion: @escaping (Error) -> Void) {
-        if case let .failure(error) = self {
-            completion(error)
-        }
-    }
-}
-
-public struct FCLAuthnResponse: Decodable {
+public struct FCLAuthnResponse {
     public let address: String
     // TODO: add additional fields
 }

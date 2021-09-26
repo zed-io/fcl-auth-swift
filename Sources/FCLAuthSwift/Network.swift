@@ -16,11 +16,4 @@
 //  limitations under the License.
 //
 
-@testable import FCLAuthSwift
-import XCTest
-
-final class FCLAuthSwiftTests: XCTestCase {
-    func testFCL() {
-        // TODO:
-    }
-}
+import Foundation
