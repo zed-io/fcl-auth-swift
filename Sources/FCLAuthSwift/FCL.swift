@@ -198,7 +198,7 @@ public final class FCL: NSObject {
             self.session = session
             session.presentationContextProvider = self
             // TODO: Need to check this
-            session.prefersEphemeralWebBrowserSession = true
+            session.prefersEphemeralWebBrowserSession = false
             session.start()
         }
     }
