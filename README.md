@@ -15,7 +15,7 @@ The [demo app](/Example) in this project shows how to use FCL inside an iOS app.
 
 ```swift
 dependencies: [
-  .package(url: "https://github.com/zed-io/fcl-auth-swift.git", from: "0.0.4-beta")
+  .package(url: "https://github.com/zed-io/fcl-auth-swift.git", from: "0.0.5-beta")
 ]
 ```
 
