@@ -56,8 +56,12 @@ class NFTAPIClient {
                 do {
                     let decoder = JSONDecoder()
                     let dateFormatter = DateFormatter()
+                    
                     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+                    
                     decoder.dateDecodingStrategy = .formatted(dateFormatter)
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+
                     let response = try decoder.decode(NFTList.self, from: data)
                     completion(Result.success(response))
                 } catch {
