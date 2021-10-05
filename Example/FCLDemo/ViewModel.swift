@@ -85,6 +85,7 @@ class ViewModel: ObservableObject {
 
 extension ViewModel: FCLAuthDelegate {
     func showLoading() {
+        address = ""
         isLoading = true
     }
 

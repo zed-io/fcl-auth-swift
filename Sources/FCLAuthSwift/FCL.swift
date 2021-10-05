@@ -118,6 +118,10 @@ public final class FCL: NSObject {
 
         fetchService(url: url, method: "POST") { response in
 
+            DispatchQueue.main.async {
+                self.delegate?.hideLoading()
+            }
+
             switch response {
             case let .success(result):
                 switch result.status {
@@ -190,7 +194,6 @@ public final class FCL: NSObject {
         }
 
         DispatchQueue.main.async {
-            self.delegate?.hideLoading()
             let session = ASWebAuthenticationSession(url: url,
                                                      callbackURLScheme: nil) { _, _ in
                 self.canContinue = false
