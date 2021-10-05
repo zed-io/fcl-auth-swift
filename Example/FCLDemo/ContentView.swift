@@ -26,35 +26,7 @@ struct ContentView: View {
         NavigationView {
             Form {
                 authenticate()
-
-                Section {
-                    Button("Fetch NFTs") {
-                        viewModel.fetchNFTs()
-                    }
-                    ScrollView(.horizontal) {
-                        LazyHGrid(rows: [GridItem()], content: {
-                            ForEach(viewModel.nfts, id: \.self) { nft in
-                                Button(action: {
-                                    viewModel.isPlayVideo.toggle()
-                                    viewModel.videoURL = nft.metadata.topShotImages.black
-                                }) {
-                                    VStack {
-                                        AsyncImage(url: nft.metadata.image) { image in
-                                            image.resizable()
-                                        } placeholder: {
-                                            ProgressView()
-                                        }
-                                        .frame(width: 200, height: 200, alignment: .center)
-                                        .cornerRadius(30)
-                                        .padding(10)
-
-                                        Text(nft.metadata.title)
-                                    }
-                                }
-                            }
-                        })
-                    }
-                }
+                NFTs()
             }.navigationTitle("FCL-Swift Demo")
         }.fullScreenCover(isPresented: $viewModel.isPlayVideo) {
             let player = AVPlayer(url: viewModel.videoURL!)
@@ -79,6 +51,37 @@ struct ContentView: View {
                 ProgressView()
             } else {
                 Text(verbatim: viewModel.address)
+            }
+        }
+    }
+
+    fileprivate func NFTs() -> some View {
+        return Section {
+            Button("Fetch NFTs") {
+                viewModel.fetchNFTs()
+            }
+            ScrollView(.horizontal) {
+                LazyHGrid(rows: [GridItem()], content: {
+                    ForEach(viewModel.nfts, id: \.self) { nft in
+                        Button(action: {
+                            viewModel.isPlayVideo.toggle()
+                            viewModel.videoURL = nft.metadata.topShotImages.black
+                        }) {
+                            VStack {
+                                AsyncImage(url: nft.metadata.image) { image in
+                                    image.resizable()
+                                } placeholder: {
+                                    ProgressView()
+                                }
+                                .frame(width: 200, height: 200, alignment: .center)
+                                .cornerRadius(30)
+                                .padding(10)
+
+                                Text(nft.metadata.title)
+                            }
+                        }
+                    }
+                })
             }
         }
     }

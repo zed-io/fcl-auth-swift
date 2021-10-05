@@ -55,6 +55,7 @@ class ViewModel: ObservableObject {
 
     func authn(provider: FCLProvider) {
         // Default provider is dapper
+        address = ""
         fcl.authenticate(provider: provider) { result in
             DispatchQueue.main.async {
                 switch result {
@@ -85,7 +86,6 @@ class ViewModel: ObservableObject {
 
 extension ViewModel: FCLAuthDelegate {
     func showLoading() {
-        address = ""
         isLoading = true
     }
 

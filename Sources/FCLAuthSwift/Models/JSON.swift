@@ -19,24 +19,24 @@
 import Foundation
 
 struct AuthnResponse: Decodable {
-    public let fType: String
-    public let fVsn: String
-    public let status: Status
-    public var updates: Service?
-    public var local: Service?
-    public var data: AuthnData?
-    public let reason: String?
+    let fType: String
+    let fVsn: String
+    let status: Status
+    var updates: Service?
+    var local: Service?
+    var data: AuthnData?
+    let reason: String?
 }
 
 struct AuthnData: Decodable {
-    public let addr: String?
-    public let fType: String?
-    public let fVsn: String?
-    public let services: [Service]?
-    public let proposer: Service?
-    public let payer: [Service]?
-    public let authorization: [Service]?
-    public let signature: String?
+    let addr: String?
+    let fType: String?
+    let fVsn: String?
+    let services: [Service]?
+    let proposer: Service?
+    let payer: [Service]?
+    let authorization: [Service]?
+    let signature: String?
 }
 
 enum Status: String, Decodable {
@@ -53,9 +53,9 @@ struct Service: Decodable {
     let endpoint: URL?
     let uid: String?
     let id: String?
-    public let identity: Identity?
-    public let provider: Provider?
-    public let params: [String: String]?
+    let identity: Identity?
+    let provider: Provider?
+    let params: [String: String]?
 
     enum CodingKeys: String, CodingKey {
         case fType
@@ -91,15 +91,15 @@ struct Service: Decodable {
 }
 
 struct Identity: Decodable {
-    public let address: String
+    let address: String
     let keyId: Int?
 }
 
 struct Provider: Decodable {
-    public let fType: String?
-    public let fVsn: String?
-    public let address: String
-    public let name: String
+    let fType: String?
+    let fVsn: String?
+    let address: String
+    let name: String
 }
 
 struct ParamValue: Decodable {
